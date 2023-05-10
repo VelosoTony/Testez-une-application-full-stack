@@ -99,4 +99,5 @@ public class AuthControllerIntTest {
                 .andExpect(status().isOk());
     }
 
+
 }

@@ -52,7 +52,7 @@ Jacoco report is available here :
 
 ## Front-End
 
-_/!\ To run the command for front-end, go to the directory "\back"_
+_/!\ To run the command for front-end, go to the directory "\front"_
 
 ### Install dependencies:
 
