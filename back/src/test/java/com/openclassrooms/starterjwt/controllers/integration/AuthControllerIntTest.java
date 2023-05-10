@@ -64,7 +64,7 @@ public class AuthControllerIntTest {
         mockMvc.perform(post("/api/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(loginRequest)))
-                .andExpect(status().isUnauthorized()));
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -97,17 +97,6 @@ public class AuthControllerIntTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(signupRequest)))
                 .andExpect(status().isOk());
-    }
-
-    @Test
-    void registerUser() throws Exception {
-        mockMvc.perform(post("/api/auth/register")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(
-                        "{ \"email\": \"thomas@robert.com\", \"password\": \"test!1234\", \"firstName\": \"Thomas\", \"lastName\": \"Robert\" }")
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-
     }
 
 }
