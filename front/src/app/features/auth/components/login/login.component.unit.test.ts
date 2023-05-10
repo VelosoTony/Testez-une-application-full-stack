@@ -17,27 +17,41 @@ import { AuthService } from '../../services/auth.service';
 import { of, throwError } from 'rxjs';
 
 describe('LoginComponent', () => {
-
-  const mockSessionInformation: SessionInformation = { token: '', type: '', id: 1, username: '', firstName: '', lastName: '', admin: true };
+  const mockSessionInformation: SessionInformation = {
+    token: '',
+    type: '',
+    id: 1,
+    username: '',
+    firstName: '',
+    lastName: '',
+    admin: true,
+  };
 
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
   let mockRouter: Router;
-  let mockSessionService: SessionService;
-  let mockAuthService: AuthService;
+  let mockSessionService: jest.Mocked<SessionService>;
+  let mockAuthService: jest.Mocked<AuthService>;
 
   mockRouter = {
-    navigate: jest.fn()
- } as unknown as jest.Mocked<Router>
+    navigate: jest.fn(),
+  } as unknown as jest.Mocked<Router>;
+
+  mockAuthService = {
+    login: jest.fn().mockReturnValue(of(undefined)),
+  } as unknown as jest.Mocked<AuthService>;
+
+  mockSessionService = {
+    logIn: jest.fn().mockReturnValue(of(mockSessionInformation)),
+  } as unknown as jest.Mocked<SessionService>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [LoginComponent],
       providers: [
-        SessionService,
-        AuthService,
-        { provide: Router, useValue: mockRouter }
-
+        { provide: SessionService, useValue: mockSessionService },
+        { provide: AuthService, useValue: mockAuthService },
+        { provide: Router, useValue: mockRouter },
       ],
       imports: [
         RouterTestingModule,
@@ -47,18 +61,15 @@ describe('LoginComponent', () => {
         MatIconModule,
         MatFormFieldModule,
         MatInputModule,
-        ReactiveFormsModule]
-    })
-      .compileComponents();
+        ReactiveFormsModule,
+      ],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
 
-    mockAuthService = TestBed.inject(AuthService);
     mockRouter = TestBed.inject(Router);
-    mockSessionService = TestBed.inject(SessionService);
-
   });
 
   it('should create', () => {
@@ -66,13 +77,17 @@ describe('LoginComponent', () => {
   });
 
   it('should call AuthService.login()', () => {
-    const loginSpy = jest.spyOn(mockAuthService, 'login').mockReturnValue( of({} as SessionInformation));
+    const loginSpy = jest
+      .spyOn(mockAuthService, 'login')
+      .mockReturnValue(of({} as SessionInformation));
     component.submit();
     expect(loginSpy).toHaveBeenCalled;
   });
 
   it('should call sessionService.logIn()', () => {
-    const logInSpy = jest.spyOn(mockSessionService, 'logIn').mockImplementation( () => {} );
+    const logInSpy = jest
+      .spyOn(mockSessionService, 'logIn')
+      .mockImplementation(() => {});
     component.submit();
     expect(logInSpy).toHaveBeenCalled;
   });
@@ -85,10 +100,11 @@ describe('LoginComponent', () => {
 
   it('should set onError to true on error during login', () => {
     const error = new Error();
-    const errorSpy = jest.spyOn(mockAuthService, 'login').mockReturnValueOnce(throwError(error));
+    const errorSpy = jest
+      .spyOn(mockAuthService, 'login')
+      .mockReturnValueOnce(throwError(error));
     component.submit();
-    expect(errorSpy).toHaveBeenCalled
+    expect(errorSpy).toHaveBeenCalled;
     expect(component.onError).toBeTruthy();
   });
-
 });
