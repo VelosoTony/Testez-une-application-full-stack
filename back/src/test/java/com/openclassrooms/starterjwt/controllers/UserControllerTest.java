@@ -12,7 +12,6 @@ import static org.mockito.Mockito.verify;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.internal.stubbing.answers.ThrowsException;
 import org.mockito.junit.jupiter.MockitoExtension;
 import static org.mockito.Mockito.when;
 
@@ -94,7 +93,7 @@ class UserControllerTest {
 
         verify(userService).findById(id);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        assertEquals(response.getBody(), null);
+        assertEquals(null, response.getBody());
 
     }
 

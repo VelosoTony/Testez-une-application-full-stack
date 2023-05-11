@@ -3,7 +3,6 @@ package com.openclassrooms.starterjwt.controllers;
 import com.openclassrooms.starterjwt.models.Teacher;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mockitoSession;
 import static org.mockito.Mockito.verify;
 
 import org.junit.jupiter.api.Test;
@@ -74,7 +73,7 @@ class TeacherControllerTest {
 
         verify(teacherService).findById(id);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        assertEquals(response.getBody(), null);
+        assertEquals(null, response.getBody());
 
     }
 

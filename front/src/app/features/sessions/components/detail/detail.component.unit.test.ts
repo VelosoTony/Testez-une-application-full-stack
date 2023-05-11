@@ -5,7 +5,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { RouterTestingModule, } from '@angular/router/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { expect } from '@jest/globals';
 import { of } from 'rxjs';
 import { SessionService } from '../../../../services/session.service';
@@ -17,11 +17,23 @@ import { DetailComponent } from './detail.component';
 import { SessionInformation } from 'src/app/interfaces/sessionInformation.interface';
 import { Teacher } from 'src/app/interfaces/teacher.interface';
 
-
 describe('DetailComponent', () => {
-
-  const mockSessionInformation: SessionInformation = { token: '', type: '', id: 1, username: '', firstName: '', lastName: '', admin: true };
-  const mockTeacher: Teacher = { id: 1, lastName: 'Doe', firstName: 'John', createdAt: new Date(), updatedAt: new Date()};
+  const mockSessionInformation: SessionInformation = {
+    token: '',
+    type: '',
+    id: 1,
+    username: '',
+    firstName: '',
+    lastName: '',
+    admin: true,
+  };
+  const mockTeacher: Teacher = {
+    id: 1,
+    lastName: 'Doe',
+    firstName: 'John',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
 
   let component: DetailComponent;
   let fixture: ComponentFixture<DetailComponent>;
@@ -35,30 +47,29 @@ describe('DetailComponent', () => {
   let mockSession: jest.Mocked<Session>;
 
   beforeEach(async () => {
-
     mockSession = {
       id: 1,
       users: [0],
-      teacher_id: 999
+      teacher_id: 999,
     } as unknown as jest.Mocked<Session>;
 
     mockRouter = {
-      navigate: jest.fn()
+      navigate: jest.fn(),
     } as unknown as jest.Mocked<Router>;
 
     mockMatSnackBar = {
-      open: jest.fn()
+      open: jest.fn(),
     } as unknown as jest.Mocked<MatSnackBar>;
 
     mockSessionService = {
-      sessionInformation: mockSessionInformation
+      sessionInformation: mockSessionInformation,
     } as unknown as jest.Mocked<SessionService>;
 
     mockSessionApiService = {
       delete: jest.fn(),
       participate: jest.fn(),
       unParticipate: jest.fn(),
-      detail: jest.fn().mockReturnValue(of(mockSession))
+      detail: jest.fn().mockReturnValue(of(mockSession)),
     } as unknown as jest.Mocked<SessionApiService>;
 
     mockTeacherService = {
@@ -68,7 +79,7 @@ describe('DetailComponent', () => {
     mockActivatedRoute = {
       snapshot: {
         paramMap: {
-          get: jest.fn().mockReturnValue('1'),// Mocking the 'id' parameter value
+          get: jest.fn().mockReturnValue('1'), // Mocking the 'id' parameter value
         },
       },
     } as unknown as jest.Mocked<ActivatedRoute>;
@@ -80,7 +91,7 @@ describe('DetailComponent', () => {
         MatSnackBarModule,
         ReactiveFormsModule,
         MatCardModule,
-        MatIconModule
+        MatIconModule,
       ],
       declarations: [DetailComponent],
       providers: [
@@ -99,7 +110,6 @@ describe('DetailComponent', () => {
     component = fixture.componentInstance;
 
     fixture.detectChanges();
-
   });
 
   it('should create', () => {
@@ -116,8 +126,12 @@ describe('DetailComponent', () => {
 
   describe('ngOnInit', () => {
     it('should call sessionApiService.detail and teacherService.detail on ngOnInit', () => {
-      const SessionApiServiceSpy = jest.spyOn(mockSessionApiService, 'detail').mockReturnValue(of(mockSession));
-      const TeacherServiceSpy = jest.spyOn(mockTeacherService, 'detail').mockReturnValue(of(mockTeacher));
+      const SessionApiServiceSpy = jest
+        .spyOn(mockSessionApiService, 'detail')
+        .mockReturnValue(of(mockSession));
+      const TeacherServiceSpy = jest
+        .spyOn(mockTeacherService, 'detail')
+        .mockReturnValue(of(mockTeacher));
 
       component.ngOnInit();
 
@@ -131,36 +145,49 @@ describe('DetailComponent', () => {
 
   describe('delete', () => {
     it('should call sessionApiService.delete and router.navigate on delete', () => {
-      const sessionApiServiceSpy = jest.spyOn(mockSessionApiService, 'delete').mockReturnValue(of(null));
+      const sessionApiServiceSpy = jest
+        .spyOn(mockSessionApiService, 'delete')
+        .mockReturnValue(of(null));
 
       component.delete();
 
       expect(sessionApiServiceSpy).toHaveBeenCalledWith('1');
-      expect(mockMatSnackBar.open).toHaveBeenCalledWith('Session deleted !', 'Close', { duration: 3000 });
+      expect(mockMatSnackBar.open).toHaveBeenCalledWith(
+        'Session deleted !',
+        'Close',
+        { duration: 3000 }
+      );
       expect(mockRouter.navigate).toHaveBeenCalledWith(['sessions']);
     });
   });
 
   describe('participate', () => {
     it('should call sessionApiService.participate on participate', () => {
-      const participeSpy =  jest.spyOn(mockSessionApiService, 'participate').mockReturnValue(of(void 0));
+      const participeSpy = jest
+        .spyOn(mockSessionApiService, 'participate')
+        .mockReturnValue(of(void 0));
 
       component.participate();
 
-      expect(participeSpy).toHaveBeenCalledWith(mockSession.id?.toString(), mockSessionInformation.id.toString());
+      expect(participeSpy).toHaveBeenCalledWith(
+        mockSession.id?.toString(),
+        mockSessionInformation.id.toString()
+      );
     });
   });
 
   describe('unParticipate', () => {
     it('should call sessionApiService.unParticipate on unParticipate', () => {
-      const unParticipeSpy =  jest.spyOn(mockSessionApiService, 'unParticipate').mockReturnValue(of(void 0));
+      const unParticipeSpy = jest
+        .spyOn(mockSessionApiService, 'unParticipate')
+        .mockReturnValue(of(void 0));
 
       component.unParticipate();
 
-      expect(unParticipeSpy).toHaveBeenCalledWith(mockSession.id?.toString(), mockSessionInformation.id.toString());
+      expect(unParticipeSpy).toHaveBeenCalledWith(
+        mockSession.id?.toString(),
+        mockSessionInformation.id.toString()
+      );
     });
   });
-
-
-
 });

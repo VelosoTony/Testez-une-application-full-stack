@@ -7,8 +7,6 @@ import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 
-import javax.persistence.MapKeyColumn;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -25,41 +23,41 @@ import com.openclassrooms.starterjwt.repository.UserRepository;
 
 public class UserDetailsServiceImplTest {
 
-    @Mock
-    UserRepository userRepository;
+  @Mock
+  UserRepository userRepository;
 
-    @Test
-    void testLoadUserByUsername() {
+  @Test
+  void testLoadUserByUsername() {
 
-        Long userId = 1L;
-        String email = "test@mail.com";
-        String password = "password";
-        String firstName = "Doe";
-        String lastName = "John";
+    Long userId = 1L;
+    String email = "test@mail.com";
+    String password = "password";
+    String firstName = "Doe";
+    String lastName = "John";
 
-        User user = User.builder()
-                .id(userId)
-                .email(email)
-                .password(password)
-                .firstName(firstName)
-                .lastName(lastName)
-                .build();
+    User user = User.builder()
+        .id(userId)
+        .email(email)
+        .password(password)
+        .firstName(firstName)
+        .lastName(lastName)
+        .build();
 
-        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
+    when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
 
-        UserDetailsServiceImpl userDetailsService = new UserDetailsServiceImpl(userRepository);
+    UserDetailsServiceImpl userDetailsService = new UserDetailsServiceImpl(userRepository);
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-        assert userDetails instanceof UserDetailsImpl;
-        UserDetailsImpl userDetailsImpl = (UserDetailsImpl) userDetails;
-        assertEquals(userId, userDetailsImpl.getId());
-        assertEquals(email, userDetailsImpl.getUsername());
-        assertEquals(firstName, userDetailsImpl.getFirstName());
-        assertEquals(lastName, userDetailsImpl.getLastName());
-        assertEquals(password, userDetailsImpl.getPassword());
-    }
+    UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+    assert userDetails instanceof UserDetailsImpl;
+    UserDetailsImpl userDetailsImpl = (UserDetailsImpl) userDetails;
+    assertEquals(userId, userDetailsImpl.getId());
+    assertEquals(email, userDetailsImpl.getUsername());
+    assertEquals(firstName, userDetailsImpl.getFirstName());
+    assertEquals(lastName, userDetailsImpl.getLastName());
+    assertEquals(password, userDetailsImpl.getPassword());
+  }
 
-    @Test
+  @Test
     void testLoadUserByUsernameNotFound() {
         
       when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
